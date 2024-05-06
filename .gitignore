@@ -1,10 +1,10 @@
 NOTE.md
 
-./src/model
-./src/model.o
+/src/model
+/src/model.o
 
-./src/main
-./src/main.o
+/src/main
+/src/main.o
 
-./output/out
-./output/out.o
+/output/out
+/output/out.o
