@@ -5,7 +5,7 @@ _start:
     mov x0, #1        
     adrp x1,input@PAGE
     add x1, x1, input@PAGEOFF
-    mov x2, 19
+    mov x2, 102
     mov x16, #4       
     svc #0x80
 

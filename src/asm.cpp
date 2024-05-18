@@ -1,13 +1,12 @@
 #include "asm.h"
 
-string exclaim(const string&name) {
+string normal(const string&name) {
     string name_ = "";
     name_ = toupper(name[0]);
 
     for (int i = 1; i < name.length(); i++) {
         name_ += name[i];
     }
-    name_ += "!";
     return name_;
 }
 

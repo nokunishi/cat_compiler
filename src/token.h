@@ -9,16 +9,24 @@
 
 using namespace std;
 
+const int ANIMAL_IDX = 0;
+const int SOUND_IDX = 1;
+const int ACTION_IDX = 2;
+const int SEP_IDX = 3;
+const int STR_IDX = 4;
+
 
 class Token {
-    int returnVal(vector<Token> &tokens, const string&str, int i);
+    int parseStr(vector<Token> &tokens, const string&str, int i);
     int parseSep(vector<Token> &tokens, const string&str, int i);
+    int parseAnimal(vector<Token> &tokens, const string&str, int i);
     
     public:
     enum TokenType {
-        _print,
-        _str,
+        animal,
+        action,
         sep,
+        str
     };
     TokenType type;
     string value;

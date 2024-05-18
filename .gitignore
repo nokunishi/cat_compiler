@@ -1,9 +1,11 @@
 NOTE.md
 
-/src/model
 /src/main
 /src/asm
 /src/token
 
-/output/out
+/out
 *.o
+
+.vscode
+

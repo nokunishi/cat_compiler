@@ -9,7 +9,7 @@
 
 using namespace std;
 
-string exclaim(const string&name);
+string normal(const string&name);
 string demand(const string&name);
 void create_asm(const string &p, const string &str, int lno);
 

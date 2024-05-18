@@ -1,3 +1,14 @@
 meow.(hi I'm a cat ^._.^)
 meow!(pet me)
 meow!!(feed me)
+
+
+woof.(hi I'm a dog)
+woof.(people call me Mugi :))
+woof!(I'm cute and marvellous)
+woof!!(all attention on me)
+
+
+
+#define cow moo
+moo.(hi I'm a cow)
