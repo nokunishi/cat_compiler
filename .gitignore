@@ -1,10 +1,9 @@
 NOTE.md
 
 /src/model
-/src/model.o
-
 /src/main
-/src/main.o
+/src/asm
+/src/token
 
 /output/out
-/output/out.o
+*.o

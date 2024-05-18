@@ -1,1 +1,1 @@
-compiler for hypothetical cat programming language ^._.^
+compiler that converts a simple, intuitive language into c

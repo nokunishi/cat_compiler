@@ -1,132 +1,60 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <sys/stat.h>
+#include<stdio.h>
+#include<string.h>
 
-using namespace std;
+#include "asm.h"
+#include "token.h"
 
-enum class TokenType {
-    _print,
-    _str,
-    sep,
-};
-
-struct Token {
-    TokenType type;
-    string value;
-
-    Token(TokenType t, string v) {
-        type = t;
-        value =v;
-    }
-};
-
-void customize(const string &p, const string &str) {
-    string line = "";
-    ifstream f(p);
-    ofstream out;
-    out.open("../output/out.s",ios::out|ios::binary);
-
-    while (line.find("mov x2,") == string::npos) {
-        out << line << endl;
-        getline(f, line);
-    }
-
-    out << "    mov x2, " + to_string(str.length() + 1) << endl;
-
-    while (line.find("input:") == string::npos) {
-        out << line << endl;
-        getline(f, line);
-    }
-
-    out << "input: .ascii \"" + str + "\"" << endl;
-}
-
-
-
-string tokens_to_asm(const vector<Token> &tokens) {
+void tokens_to_asm(const vector<Token> &tokens, int lno) {
     stringstream output;
 
-    for (int i = 0; i < tokens.size(); i++) {
-        const Token& token = tokens[i];
-
-        if (token.type == TokenType::_print) {
-            if (i + 1 < tokens.size() && tokens.at(i+1).type == TokenType::_str) {
-                if (i + 2 < tokens.size() && tokens.at(i+2).type == TokenType::sep) {
-                    customize("model.s", tokens[i+1].value);
-                }
-            }
-        }
-
+    if (tokens.size() != 3 || tokens[0].type != Token::TokenType::_print ||
+            tokens[1].type != Token::TokenType::sep) {
+        return;
     }
 
-    return "";
-}
-
-int returnVal(vector<Token> &tokens, const string&str, int i) {
-    string buf = "";
-    char c = str[i];
-
-    while (c != ')') {
-        buf.push_back(c);
-        i++;
-        c = str[i];
+    string name;
+    if (tokens[1].value == ".") {
+        name = tokens[2].value;
     }
-
-    tokens.push_back(Token(TokenType::_str, buf));
-    if (buf.length() > 0) {
-        return i + 1;
-    } else {
-        exit(EXIT_FAILURE);
+    if (tokens[1].value == "!") {
+        name = exclaim(tokens[2].value);
     }
+    if (tokens[1].value == "!!") {
+        name = demand(tokens[2].value);
+    }
+    create_asm("model.s", name, lno);
 }
 
 
-vector<Token> tokenize(const string &str) {
-    vector<Token> tokens;
-    string buf;
-    int i = 0;
-    char c = str[i];
-
-    while (isalpha(c)) {
-        buf.push_back(c);
-        i++;
-        c = str[i];
-    }
-
-    if (buf == "meow") {
-        tokens.push_back(Token(TokenType::_print, "printf"));
-        buf.clear();
-    }
-
-    if (c != '(') {
-        exit(EXIT_FAILURE);
-    }
-
-    i = returnVal(tokens, str, i+1);
-    c = str[i];
-
-    if (c == '.') {
-        tokens.push_back(Token(TokenType::sep, "."));
-    }
-
-    return tokens;
-}
-
-int main(int argc, char* argv[]){
-    if (argc != 2) {
-        cerr << "invalid num of args" << endl;
-        return EXIT_FAILURE;
-    }
-
-    
-    fstream f(argv[1]);
+char * file_str(fstream &f) {
     stringstream s;
     string contents;
 
     s << f.rdbuf();
-    vector<Token> token = tokenize(s.str());
-    tokens_to_asm(token);
+    string s_tmp = s.str();
+    const char * s_const = s_tmp.c_str();
+    return strdup(s_const);
+}
+
+int main(int argc, char* argv[]){
+    if (argc != 2) {
+        cerr << "specify input file" << endl;
+        return EXIT_FAILURE;
+    }
+
+    fstream f(argv[1]);
+    Token t;
+    int i = 0;
+    
+    char * s_ = file_str(f);
+    for (char * l = strtok(s_, "\n"); l != NULL; l = strtok(NULL, "\n")) {
+        vector<Token> token = t.tokenize(l);
+        tokens_to_asm(token, i);
+        i++;
+    }
 
     return EXIT_SUCCESS;
 }
