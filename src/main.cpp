@@ -1,11 +1,14 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include<stdio.h>
-#include<string.h>
+#include <stdio.h>
+#include <string.h>
+#include <filesystem>
 
 #include "asm.h"
 #include "token.h"
+
+namespace fs = std::__fs::filesystem;
 
 void tokens_to_asm(const vector<Token> &tokens, int lno) {
     stringstream output;
@@ -55,6 +58,25 @@ int main(int argc, char* argv[]){
         tokens_to_asm(token, i);
         i++;
     }
+
+    #ifdef __APPLE__
+        for (const auto & entry: fs::directory_iterator("../out")) {
+            string name = entry.path();
+            string name_ = "";
+            int i = 0;
+            while (i < name.length() - 2) {
+                name_ += name[i];
+                i++;
+            }
+
+            const string cmd1 = "as " + name + " -o " + name_ + ".o";   
+            const string cmd2 = "ld " + name_ + ".o -o " + name_ + " -l System -syslibroot " +
+                "`xcrun -sdk macosx --show-sdk-path` -e _start -arch arm64";
+            
+            system(cmd1.c_str());
+            system(cmd2.c_str()); 
+        }
+    #endif 
 
     return EXIT_SUCCESS;
 }

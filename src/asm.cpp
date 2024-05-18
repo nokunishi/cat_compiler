@@ -30,7 +30,7 @@ void create_asm(const string &p, const string &str, int lno) {
     ss << lno;
     string name = ss.str();
 
-    out.open("../output/" + name + ".s", ios::out|ios::binary);
+    out.open("../out/" + name + ".s", ios::out|ios::binary);
 
     while (line.find("mov x2,") == string::npos) {
         out << line << endl;

@@ -15,4 +15,4 @@ token.o: token.h token.cpp
 	$(CXX) $(CFLAGS) -c token.cpp
 
 clean:
-	rm -f *.o main
+	rm -f *.o ../out/*.o main
