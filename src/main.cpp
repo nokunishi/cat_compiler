@@ -10,6 +10,7 @@
 
 #include "asm.h"
 #include "token.h"
+#include "animal.h"
 
 namespace fs = std::__fs::filesystem;
 
@@ -26,9 +27,8 @@ char * file_str(fstream &f) {
 void tokens_to_asm(const vector<Token> &tokens, int lno) {
     stringstream output;
 
-    if (tokens.size() != 4 || tokens[0].type != Token::TokenType::animal ||
-            tokens[1].type != Token::TokenType::action || 
-            tokens[2].type != Token::TokenType::sep) {
+    if (tokens[ACTION_IDX].type != Token::TokenType::action || 
+            tokens[SEP_IDX].type != Token::TokenType::sep) {
         return;
     }
 
@@ -43,6 +43,30 @@ void tokens_to_asm(const vector<Token> &tokens, int lno) {
         name = demand(tokens[STR_IDX].value) + "!!";
     }
     create_asm("model.s", name, lno);
+}
+
+Animal customizeAnimal(char * l) {
+    char tmp[100];
+    strcpy(tmp, l);
+    int i = 8;
+
+    string type = "";
+    string sound = "";
+
+    while (i < sizeof(tmp) && tmp[i] != ' ') {
+        type.push_back(tmp[i]);
+        i++;
+    }
+
+    if (!isspace(tmp[i])) {
+        throw "invalid format";
+    }
+    i++;
+    while (i < sizeof(tmp) && isalpha(tmp[i])) {
+        sound.push_back(tmp[i]);
+        i++;
+    }
+    return Animal(type, sound);
 }
 
 
@@ -61,24 +85,20 @@ int main(int argc, char* argv[]){
 
     fstream f(argv[1]);
     int i = 0;
+    vector<Animal> animals;
     
     char * s_ = file_str(f);
     for (char * l = strtok(s_, "\n"); l != NULL; l = strtok(NULL, "\n")) {
         Token t;
-        bool isCustom = false;
 
         if (strstr(l, "#define") != NULL) {
-            isCustom = true;
-            char * w = strtok(l, " ");
-            char * animal = strtok(NULL, " ");
-            char * sound = w = strtok(NULL, " ");
-            
-            Token::tokens.push_back(Token::TokenType::animal, animal);
-        } 
-
-        vector<Token> token = t.tokenize(l);
-        tokens_to_asm(token, i);
-        i++;
+            Animal custom = customizeAnimal(l);
+            animals.push_back(custom);
+        } else {
+            vector<Token> token = t.tokenize(l, animals);
+            tokens_to_asm(token, i);
+            i++;
+        }
     }
 
     #ifdef __APPLE__

@@ -46,7 +46,7 @@ int Token::parseSep(vector<Token> &tokens, const string&str, int i) {
     exit(EXIT_FAILURE);
 }
 
-int Token::parseAnimal(vector<Token> &tokens, const string&str, int i) {
+int Token::parseAnimal(vector<Token> &tokens, vector<Animal> animals, const string&str, int i) {
     char c = str[i];
     string buf;
 
@@ -57,14 +57,10 @@ int Token::parseAnimal(vector<Token> &tokens, const string&str, int i) {
     }
 
     if (buf == "meow") {
-        tokens.push_back(Token(TokenType::animal, "cat"));
+        animals.push_back(Animal("cat", "meow"));
     }
     if (buf == "woof") {
-        tokens.push_back(Token(TokenType::animal, "dog"));
-    }
-
-    if (tokens.size() != 1) {
-        exit(EXIT_FAILURE);
+        animals.push_back(Animal("dog", "woof"));
     }
 
     tokens.push_back(Token(TokenType::action, "printf"));
@@ -72,17 +68,16 @@ int Token::parseAnimal(vector<Token> &tokens, const string&str, int i) {
 }
 
 
-vector<Token> Token::tokenize(const string &str) {
+vector<Token> Token::tokenize(const string &str, vector<Animal> animals) {
     vector<Token> tokens;
     string buf;
     int i = 0;
-    char c = str[i];
-
     
-    i = parseAnimal(tokens, str, i);
+
+    i = parseAnimal(tokens, animals, str, i);
     i = parseSep(tokens, str, i);
 
-    c = str[i];
+    char c = str[i];
     if (c != '(') {
         exit(EXIT_FAILURE);
     }
