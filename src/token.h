@@ -11,9 +11,10 @@
 
 using namespace std;
 
-const int ACTION_IDX = 0;
-const int SEP_IDX = 1;
-const int STR_IDX = 2;
+const int ANIMAL_IDX = 0;
+const int ACTION_IDX = 1;
+const int SEP_IDX = 2;
+const int STR_IDX = 3;
 
 
 class Token {
@@ -23,6 +24,7 @@ class Token {
     
     public:
     enum TokenType {
+        animal,
         action,
         sep,
         str

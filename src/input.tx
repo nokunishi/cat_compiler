@@ -2,6 +2,9 @@ meow.(hi I'm a cat ^._.^)
 meow!(pet me)
 meow!!(feed me)
 
+#define dog bark
+bark.(heyyy I'm a dog)
+
 
 woof.(hi I'm a dog)
 woof.(people call me Mugi :))
@@ -12,3 +15,4 @@ woof!!(all attention on me)
 
 #define cow moo
 moo.(hi I'm a cow)
+moo.(hi I'm a cow2)

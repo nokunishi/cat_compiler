@@ -58,9 +58,20 @@ int Token::parseAnimal(vector<Token> &tokens, vector<Animal> animals, const stri
 
     if (buf == "meow") {
         animals.push_back(Animal("cat", "meow"));
+        tokens.push_back(Token(TokenType::animal, "cat"));
     }
-    if (buf == "woof") {
+
+    else if (buf == "woof") {
         animals.push_back(Animal("dog", "woof"));
+        tokens.push_back(Token(TokenType::animal, "dog"));
+    }
+
+    else {
+        for (Animal a: animals) {
+            if (a.sound == buf) {
+                tokens.push_back(Token(TokenType::animal, a.type));
+            }
+        }
     }
 
     tokens.push_back(Token(TokenType::action, "printf"));

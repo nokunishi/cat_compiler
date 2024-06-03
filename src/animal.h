@@ -13,5 +13,7 @@ class Animal {
     Animal(string, string);
 };
 
+Animal customizeAnimal(char * l);
+
 
 #endif 

@@ -5,9 +5,8 @@ COMMANDS:
 2. make 
 3. ./main {inputfile_name}
     > i.e.) ./main input.tx
-4. ../out/{filename}.o
-    > each file in the ./out directory has name corresponding to the line number in the input file (0-based indexing)
-    > this prints out msg of each line in the input file
+4. ../out/{animal_name}.o
+    > messages for each animal is grouped into a single file
 
 How to write an input file:
 - by default, types of animals it supports are:

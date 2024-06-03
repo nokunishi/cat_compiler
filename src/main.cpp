@@ -24,50 +24,6 @@ char * file_str(fstream &f) {
     return strdup(s_const);
 }
 
-void tokens_to_asm(const vector<Token> &tokens, int lno) {
-    stringstream output;
-
-    if (tokens[ACTION_IDX].type != Token::TokenType::action || 
-            tokens[SEP_IDX].type != Token::TokenType::sep) {
-        return;
-    }
-
-    string name;
-    if (tokens[SEP_IDX].value == ".") {
-        name = normal(tokens[STR_IDX].value);
-    }
-    if (tokens[SEP_IDX].value == "!") {
-        name = normal(tokens[STR_IDX].value) + "!";
-    }
-    if (tokens[SEP_IDX].value == "!!") {
-        name = demand(tokens[STR_IDX].value) + "!!";
-    }
-    create_asm("model.s", name, lno);
-}
-
-Animal customizeAnimal(char * l) {
-    char tmp[100];
-    strcpy(tmp, l);
-    int i = 8;
-
-    string type = "";
-    string sound = "";
-
-    while (i < sizeof(tmp) && tmp[i] != ' ') {
-        type.push_back(tmp[i]);
-        i++;
-    }
-
-    if (!isspace(tmp[i])) {
-        throw "invalid format";
-    }
-    i++;
-    while (i < sizeof(tmp) && isalpha(tmp[i])) {
-        sound.push_back(tmp[i]);
-        i++;
-    }
-    return Animal(type, sound);
-}
 
 
 int main(int argc, char* argv[]){
@@ -94,6 +50,7 @@ int main(int argc, char* argv[]){
         if (strstr(l, "#define") != NULL) {
             Animal custom = customizeAnimal(l);
             animals.push_back(custom);
+
         } else {
             vector<Token> token = t.tokenize(l, animals);
             tokens_to_asm(token, i);
