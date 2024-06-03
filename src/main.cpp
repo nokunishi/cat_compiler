@@ -42,6 +42,7 @@ int main(int argc, char* argv[]){
     fstream f(argv[1]);
     int i = 0;
     vector<Animal> animals;
+    unordered_map <string, vector<string>> m;
     
     char * s_ = file_str(f);
     for (char * l = strtok(s_, "\n"); l != NULL; l = strtok(NULL, "\n")) {
@@ -53,10 +54,32 @@ int main(int argc, char* argv[]){
 
         } else {
             vector<Token> token = t.tokenize(l, animals);
-            tokens_to_asm(token, i);
+            tokens_to_asm(token, m, i);
             i++;
         }
     }
+
+
+    for(auto kv : m) {
+        ofstream out;
+        out.open("../out/" + kv.first + ".s", std::ios_base::app|ios::binary);
+        out << "    mov x0, #0" << endl;
+        out << "    mov x16, #1" << endl;
+        out << "    svc #0xFFFF" << endl;
+        out << "\n" << endl;
+        out << ".data" << endl;
+        out.close();
+    }
+
+    for(auto kv : m) {
+        for (string v: kv.second) {
+            ofstream out;
+            out.open("../out/" + kv.first + ".s", std::ios_base::app|ios::binary);
+            out << v << endl;
+            out.close();
+        }
+    }
+    
 
     #ifdef __APPLE__
         for (const auto & entry: fs::directory_iterator("../out")) {

@@ -20,39 +20,38 @@ string demand(const string&name) {
     return name_;
 }
 
-void create_asm(const string &p, const string animal, const string str, int l_no) {
-    string line = "";
-    ifstream f(p);
-    ofstream out;
+void printf_asm(ofstream &out, const string str, string l_no) {
+    string len = to_string(str.length() + 2);
 
+    out << "    mov x0, #1" << endl;        
+    out << "    adrp x1,input" + l_no + "@PAGE" << endl;
+    out << "    add x1, x1,input" + l_no + "@PAGEOFF" << endl;
+    out << "    mov x2, #" + len << endl;
+    out << "    mov x16, #4" << endl;     
+    out << "    svc #0x80" << endl;
+    out << "\n" << endl;
+}
+
+void create_asm(vector<string> &data, string animal, const string str, int l_no) {
+    ofstream out;
     out.open("../out/" + animal + ".s", std::ios_base::app|ios::binary);
     ifstream out_("../out/" + animal + ".s");
 
-    string no = to_string(l_no);
-
     if (out_.peek() == std::ifstream::traits_type::eof()) {
-        while (line.find("input@PAGE") == string::npos) {
-            out << line << endl;
-            getline(f, line);
-        }
-
-        out << "    adrp x1,input" + no + "@PAGE" << endl;
-        out << "    add x1, x1,input" + no + "@PAGEOFF" << endl;
-        getline(f, line);
-        getline(f, line);
-
-        while (line.find("input:") == string::npos) {
-            out << line << endl;
-            getline(f, line);
-        }
-        out << "input" + no + ": .ascii \"" + str + " \\n\"" << endl;
-    } else {
-        out << "input" + no + ": .ascii \"" + str + " \\n\"" << endl;
+        out << ".global _start" << endl;
+        out << ".align 2" << endl;
+        out << "\n" << endl;
+        out << "_start:" << endl;
     }
+
+    printf_asm(out, str, to_string(l_no));
+
+    data.push_back("input" + to_string(l_no) + ": .ascii \"" + str + " \\n\"");
+    out.close();
 }
 
 
-void tokens_to_asm(const vector<Token> &tokens, int i) {
+void tokens_to_asm(const vector<Token> &tokens, unordered_map<string, vector<string>> &m, int i) {
 
     if (tokens[ANIMAL_IDX].type != Token::TokenType::animal || 
         tokens[ACTION_IDX].type != Token::TokenType::action || 
@@ -71,5 +70,7 @@ void tokens_to_asm(const vector<Token> &tokens, int i) {
     if (tokens[SEP_IDX].value == "!!") {
         str = demand(tokens[STR_IDX].value) + "!!";
     }
-    create_asm("model.s", tokens[ANIMAL_IDX].value, str, i);
+    string animal = tokens[ANIMAL_IDX].value;
+
+    create_asm(m[animal], animal, str, i);
 }
