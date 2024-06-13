@@ -28,7 +28,7 @@ char * file_str(fstream &f) {
 
 int main(int argc, char* argv[]){
     if (argc != 2) {
-        cerr << "specify input file" << endl;
+        cerr << "ERROR: Specify input file" << endl;
         return EXIT_FAILURE;
     }
 
@@ -36,10 +36,11 @@ int main(int argc, char* argv[]){
     if (dir) {
         closedir(dir);
     } else if (ENOENT == errno) {
-        mkdir("../out", 0777);
+        mkdir("../out", 0755);
     }
 
-    fstream f(argv[1]);
+    string file = argv[1];
+    fstream f("../data/" + file);
     int i = 0;
     vector<Animal> animals;
     unordered_map <string, vector<string>> m;

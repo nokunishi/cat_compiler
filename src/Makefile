@@ -1,6 +1,6 @@
 CFLAGS= -std=c++11
 
-all: main
+all: clean main
 
 main: main.o asm.o token.o animal.o
 	$(CXX) $(CFLAGS) main.o asm.o token.o animal.o -o main
