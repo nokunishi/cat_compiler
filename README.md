@@ -1,14 +1,9 @@
 Compiler that converts a simple, intuitive language into ASM. Aims to allow users to learn assembly without programming experience
 
-COMMANDS:
-1. cd src
-2. make 
-3. ./main {inputfile_name}
-    > i.e.) ./main input.tx
-4. ../out/{animal_name}.o
-    > messages for each animal is grouped into a single file
+To run 'tx' language, store your input file and use the command-line-interface 
+`python3 main.py {file name} {animal name}`
 
-How to write an input file:
+Instructions to writing the input file:
 - by default, types of animals it supports are:
     > cat (meow), dog(woof)
 - to customize, write #define \<animal> \<sound>
